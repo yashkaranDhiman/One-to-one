@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock title %}</title>
+    <style>{% block css %}{% endblock css %}
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=EB+Garamond&family=Inter:wght@200&family=Karla:ital@1&family=Lato&family=Montserrat&family=Noto+Sans&family=Poppins&family=Roboto&family=Satisfy&display=swap');
+        *{
+            margin: 0;
+            padding: 0;
+            color: white;
+            font-family: 'Bebas Neue', sans-serif;
+            font-family: 'EB Garamond', serif;
+            font-family: 'Inter', sans-serif;
+            font-family: 'Karla', sans-serif;
+            font-family: 'Lato', sans-serif;
+            font-family: 'Montserrat', sans-serif;
+            font-family: 'Noto Sans', sans-serif;
+            font-family: 'Poppins', sans-serif;
+            font-family: 'Roboto', sans-serif;
+        }
+        body{
+            background-color: #222;
+        }
+
+        #sec{
+            width: 100vw;
+            height: 70px;
+            z-index: 4;
+            background-color: rgb(19, 19, 19);
+            position: fixed;
+            bottom: 0;
+            color: rgba(255, 255, 255, 0.815);
+            align-items: center;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            place-items: center;
+        }
+        footer{
+            width: 100vw;
+            height: 60px;
+            z-index: 4;
+            background-color: rgb(19, 19, 19);
+            position: fixed;
+            bottom: 0%;
+            color: rgba(255, 255, 255, 0.815);
+            align-items: center;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            place-items: center;
+        }
+        footer>div>p{
+            cursor: pointer;
+            position: absolute;
+            font-size: x-large;
+            padding-bottom: 14px;
+        }
+        footer>div>p:hover{
+            color: white;
+        }
+        footer>div>a{
+            cursor: pointer;
+            color: white;
+            position: absolute;
+            font-size: x-large;
+            bottom: 0%;
+        }
+        footer>div>a:hover{
+            color: white;
+        }
+        nav{
+            margin: 2vw 9vw;
+        }
+        nav h1{
+            font-size: 40px;
+        }
+        .user_pic{
+            border-radius: 50%;
+        }
+        footer a{
+            margin: 0vw 1vw 1vw 0;
+        }
+        .flsh{
+            background-color: rgb(0, 201, 228);
+            height: fit-content;
+            padding: 1.5vw 10vw;
+            display: grid;
+            grid-template-columns: 0.5fr 10fr 0fr;
+        }
+        .flsh strong{
+            color: black;
+            font-size: 1.2vw;
+        }
+        .flsh div{
+            color: black;
+            font-size: 1.2vw;
+        }
+        .usr_img{
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        #close{
+            color: black;
+            cursor: pointer;
+        }
+        svg{
+            cursor: pointer;
+        }
+        @media (max-width:828px) {
+            #top_ttl{
+                font-size: 4vw;
+                margin-top: 6vw;
+            }
+            #to_some{
+                font-size: 4vw;
+            }
+            p{
+                display: none;
+            }
+        }
+        @media (max-width:550px) {
+            #top_ttl{
+                font-size: 7vw;
+                margin-top: 6vw;
+            }
+            #to_some{
+                font-size: 7vw;
+            }
+            .bottom_svg{
+                width: 8vw;
+                height: 8vw;
+            }
+            .usr_img{
+                width: 8vw;
+                height: 8vw;
+            }
+        }
+    </style>
+</head>
+<body>
+
+  {% for message in messages %}
+    <div class="flsh" id="flashMessage">
+        <strong>Alert:</strong><div id="main_msg">{{message}}</div><svg id="close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30"><path d="M12.0007 10.5865L16.9504 5.63672L18.3646 7.05093L13.4149 12.0007L18.3646 16.9504L16.9504 18.3646L12.0007 13.4149L7.05093 18.3646L5.63672 16.9504L10.5865 12.0007L5.63672 7.05093L7.05093 5.63672L12.0007 10.5865Z"></path></svg>
+    </div>
+  {% endfor %}
+
+  <nav>
+        <h1 id="top_ttl">{% block page_name %}{% endblock page_name %}</h1>
+    </nav>
+    {% block body %}{% endblock body %}
+    <footer>
+
+        <div>
+            <svg onclick="changeURL1()" class="bottom_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="40" height="40"><path d="M14 14.252V16.3414C13.3744 16.1203 12.7013 16 12 16C8.68629 16 6 18.6863 6 22H4C4 17.5817 7.58172 14 12 14C12.6906 14 13.3608 14.0875 14 14.252ZM12 13C8.685 13 6 10.315 6 7C6 3.685 8.685 1 12 1C15.315 1 18 3.685 18 7C18 10.315 15.315 13 12 13ZM12 11C14.21 11 16 9.21 16 7C16 4.79 14.21 3 12 3C9.79 3 8 4.79 8 7C8 9.21 9.79 11 12 11ZM18 17V14H20V17H23V19H20V22H18V19H15V17H18Z" fill="rgba(255,255,255,1)"></path></svg><a href='{% url "friends" %}'><p>&nbsp;&nbsp;Friends</p></a>
+            </div>
+            <div>
+                <svg onclick="changeURL2()" class="bottom_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="40" height="40"><path d="M19 21.0001H5C4.44772 21.0001 4 20.5524 4 20.0001V11.0001L1 11.0001L11.3273 1.61162C11.7087 1.26488 12.2913 1.26488 12.6727 1.61162L23 11.0001L20 11.0001V20.0001C20 20.5524 19.5523 21.0001 19 21.0001ZM6 19.0001H18V9.15757L12 3.70302L6 9.15757V19.0001Z" fill="rgba(255,255,255,1)"></path></svg><a href='{% url "homepage" %}'><p>&nbsp;&nbsp;Home</p></a>
+            </div>
+            <div>
+                {% if request.user.is_authenticated %}
+                    {% if request.user.profile.pic %}
+                        <img onclick="changeURL3()" class="usr_img" src="{{ request.user.profile.pic.url }}" class="user_pic" width="40px" height="40px" alt="">
+                    {% else %}
+                        <img onclick="changeURL3()"  class="usr_img" src="{% static 'user.png' %}" class="user_pic" width="40px" height="40px" alt="">
+                    {% endif %}
+                    <a href="{% url 'profile' request.user.profile.id %}">
+                        <p>&nbsp;{{ request.user }}</p>
+                    </a>
+                {% else %}
+                    <a href="login" role="button">login</a><br>
+                {% endif %}
+            </div>
+    </footer>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    {% block js %}{% endblock js %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var closeBtn = document.getElementById('close');
+            var flashMessage = document.getElementById('flashMessage');
+    
+            closeBtn.addEventListener('click', function () {
+                flashMessage.style.display = 'none';
+            });
+        });
+        function changeURL1() {
+            // Define the new URL
+            var newURL = "{% url 'friends' %}";
+
+            // Change the current page's URL
+            window.location.href = newURL;
+        }
+        function changeURL2() {
+            // Define the new URL
+            var newURL = "{% url 'homepage' %}";
+
+            // Change the current page's URL
+            window.location.href = newURL;
+        }
+        function changeURL3() {
+            // Define the new URL
+            var newURL = "{% url 'profile' request.user.profile.id %}";
+
+            // Change the current page's URL
+            window.location.href = newURL;
+        }
+    </script>
+    
+</body>
+</html>

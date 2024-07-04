@@ -1,0 +1,235 @@
+{% extends "home/base.html" %}
+{% load static %}
+
+{% block body %}
+<div id="main">
+    {% if request.user.profile.id == to_edit.id %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="divs" id="pic">
+            {% if to_edit.pic %}
+            <img src="{{ to_edit.pic.url }}" width="50px" height="50px" alt="">
+            {% else %}
+            <img src="{% static 'user.png' %}" width="50px" height="50px" alt="">
+            {% endif %}
+            <label for="pict" class="file-label">Change profile picture</label>
+            <input type="file" name="pic" id="pict" accept=".jpg, .jpeg, .png ">
+        </div>
+        <div class="divs" id="username">
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" value="{{to_edit.name}}">
+        </div>
+        <div class="divs" id="link">
+            <label for="Add_link">Add a link</label>
+            <input type="url" name="Add_link" id="Add_link">
+        </div>
+        <div class="divs" id="bio">
+            <label for="bio">Bio</label>
+            <textarea name="bio" id="bio">{{to_edit.bio}}</textarea>
+        </div>
+        <div class="divs">
+                <button type="submit" id="sub">Save changes</button>
+        </div>
+    </form>    
+</div>
+{% else %}
+<p>something went wrong :(</p>
+{% endif %}
+
+{% endblock body %}
+{% block css %}
+footer{
+    left: 0;
+}
+#name{
+    font-size: large;
+}
+    /* Style the file input */
+    input[type="file"] {
+        display: none;  /* Hide the file input */
+    }
+
+    /* Style the label that serves as a button */
+    label[for="pict"] {
+        border-radius: 8px;
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        cursor: pointer;
+    }
+
+    /* Style the selected file name */
+    input[type="file"] + label::after {
+        content: "Custom Text";
+    }
+
+    /* Style the selected file name on hover */
+    input[type="file"] + label:hover::after {
+        color: white;
+    }
+a{
+    text-decoration: none;
+}
+#sub{
+    cursor: pointer;
+    background-color: blue;
+    color: white;
+    font-weight: 500;
+    font-size: large;
+    padding: 8px 14px;
+    border-radius: 9px;
+    margin-left: 13vw;
+    width: 150px;
+    border: 2px transparent;
+}
+#main{
+    margin: 4vw 9vw;
+}
+label{
+    font-size: larger;
+}
+img{
+    border-radius: 50%;
+}
+input{
+    height: 30px;
+    border: 1px solid white;
+    color: white;
+    border-radius: 7px;
+    padding: 3px 5px;
+    background-color: rgb(27, 27, 27);
+}
+textarea{
+    border: 1px solid white;
+    color: white;
+    border-radius: 7px;
+    background-color: rgb(27, 27, 27);
+    padding: 3px 5px;
+}
+.divs{
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    width: 80%;
+    margin: 40px 0;
+}
+input[type="file"] {
+    display: none;
+}
+
+/* Style the label that serves as a button */
+.file-label {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+/* Style the selected file name */
+input[type="file"] + .file-label::after {
+    content: "Change profile picture";
+}
+
+/* Style the selected file name on hover */
+input[type="file"] + .file-label:hover::after {
+    color: white;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+/* Additional styling for your form elements */
+label {
+    font-size: larger;
+}
+
+img {
+    border-radius: 50%;
+}
+
+input {
+    height: 30px;
+    border: 1px solid white;
+    color: white;
+    border-radius: 7px;
+    padding: 3px 5px;
+    background-color: rgb(27, 27, 27);
+}
+
+textarea {
+    border: 1px solid white;
+    color: white;
+    border-radius: 7px;
+    background-color: rgb(27, 27, 27);
+    padding: 3px 5px;
+}
+
+.divs {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    width: 80%;
+    margin: 40px 0;
+}
+@media (max-width: 600px) {
+    .divs{
+        width: 90%;
+        grid-template-columns: 6fr 16fr;
+    }
+    #sub{
+        margin-left: 20vw;
+    }
+}
+@media (max-width: 450px) {
+    .divs{
+        width: 90%;
+        grid-template-columns: 4fr 10fr;
+    }
+    #main{
+        margin: 4vw;
+    }
+    #sub{
+        margin-left: 24vw;
+    }
+    .divs {
+        width: 90%;
+    }
+}
+@media (max-width: 400px) {
+    .divs{
+        grid-template-rows: 1fr 1fr;
+        grid-template-columns: none;
+    }
+    label[for="pict"] {
+        height: fit-content
+    }
+    #main{
+        margin: 7vw;
+    }
+}
+{% endblock css %}
+{% block page_name %}Edit profile{% endblock page_name %}
+{% block js %}  
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const fileLabel = document.getElementById('file-label');
+        const fileInput = document.getElementById('pic');
+    
+        // Add a click event listener to the anchor tag
+        fileLabel.addEventListener('click', function () {
+            fileInput.click(); // Trigger the file input click event
+        });
+    
+        // Update the anchor tag text when a file is selected
+        fileInput.addEventListener('change', function () {
+            if (fileInput.files.length > 0) {
+                fileLabel.textContent = fileInput.files[0].name;
+            } else {
+                fileLabel.textContent = "Change profile picture";
+            }
+        });
+    });
+    </script>
+    
+{% endblock js %}
+{% block title %}Edit profile{% endblock title %}

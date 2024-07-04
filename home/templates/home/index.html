@@ -1,0 +1,126 @@
+{% extends "home/base.html" %}
+{% load static %}
+{% block body %}
+<div id="main">
+    {% if user.profile.friends %}
+    {% for friend in friends %}
+    <a onclick="clearUnseenCount('{{ friend.id }}')" href="{% url 'friend' friend.id %}">
+    <div id="{{friend.id}}" class="frnd">
+    <div class="box">
+        <div>
+        {% if friend.profile.pic %}
+        <img width="60px" height="60px" src="{{ friend.profile.pic.url }}" alt="Profile Picture of {{ friend.username }}">
+        {% else %}
+        <img width="60px" height="60px" src="{% static 'user.png' %}" alt="Default User Image">
+        {% endif %}
+    </div>
+        <div>
+            <h2>{{ friend.profile.name }}</h2>
+            <h5>{{ friend.latest_message|default:"No messages" }}</h5>
+        </div>  
+        <div id="num">
+            <p class="num_msg" id="{{friend.id}}">0</p>
+        </div>
+    </div>
+    </div>
+</a><hr>
+    {% endfor %}
+    {% endif %}
+    <div id="no_frnd">
+        <h4 id="to_some">want to send text to strange people <a id="aaa" href='{% url "friends" %}'>click here</a></h4>
+    </div>
+</div>
+{% endblock body %}
+
+{% block css %}
+#no_frnd{
+    padding: 1.5rem;
+    font-size: 30px;
+}
+#aaa{
+    color: #2d2dff;
+    text-decoration: underline;
+}
+#num{
+    border-radius: 50%;
+    background-color: greenyellow;
+    padding: 10px 15px;
+}
+.num_msg{
+    color: black;
+}
+a{
+    text-decoration: none;
+}
+#main{
+    background-color: rgb(10, 10, 10);
+    margin: 2vw 9vw;
+    border-radius: 10px;
+}
+#main .frnd img{
+    border-radius: 50%;
+    margin-right: 15px;
+}
+.box{
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr 14fr 0fr;
+    place-items: start;
+    margin: 20px 20px;
+    align-items: center;
+}
+#main{
+    padding: 15px 0;
+}
+
+{% endblock css %}
+{% block page_name %}Messages{% endblock page_name %}
+{% block js %}
+<script>
+    // Function to update the unseen message count
+    function updateUnseenMessageCount(friendId) {
+        fetch(`/get_unseen_message_count/${friendId}/`)
+            .then(response => response.json())
+            .then(data => {
+                const numDiv = document.getElementById(friendId);
+                const numMsgDiv = numDiv.querySelector('.num_msg');
+                const unseenCount = data.unseen_count;
+
+                // Update the message count
+                numMsgDiv.textContent = unseenCount;
+
+                // Set text color to transparent if count is 0
+                numMsgDiv.style.color = unseenCount === 0 ? 'transparent' : 'black';
+            })
+            .catch(error => console.error(error));
+    }
+
+    // Function to clear the unseen message count when a user sends a chat
+    function clearUnseenCount(friendId) {
+        const numDiv = document.getElementById(friendId);
+        const numMsgDiv = numDiv.querySelector('.num_msg');
+
+        // Clear the message count (set it to 0)
+        numMsgDiv.textContent = '0';
+
+        // Hide the num div by setting its background color to transparent
+        numDiv.style.backgroundColor = 'transparent';
+    }
+
+    // Function to periodically update unseen message counts for all friends
+    function updateAllUnseenMessageCounts() {
+        const friends = document.querySelectorAll('.frnd');
+        friends.forEach(friend => {
+            const friendId = friend.id;
+            updateUnseenMessageCount(friendId);
+        });
+
+        // Set a timeout to update counts every 1000 milliseconds
+        setTimeout(updateAllUnseenMessageCounts, 1000);
+    }
+
+    // Initial call to start updating counts
+    updateAllUnseenMessageCounts();
+</script>
+{% endblock js %}
+{% block title %}Home{% endblock title %}

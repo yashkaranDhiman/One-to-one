@@ -1,0 +1,248 @@
+{% extends "home/base.html" %}
+{% load static %}
+
+{% block body %}
+<div id="main">
+    <form id="search" action="{% url 'friends' %}" method="post">
+        {% csrf_token %}
+        <label for="srch">Search people :</label>
+        <input type="text" name="srch" id="srch">
+        <button id="srch_btn" type="submit">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                <path d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z"
+                    fill="rgba(0,0,0,1)"></path>
+            </svg>&nbsp;search
+        </button>
+    </form>
+</div>
+    {% for friend in all_friends %}
+    {% if request.user != friend.user %}
+    <div id="{{ friend.id }}" class="frnd">
+        <div class="box">
+            <a class="aa" href="{% url 'profile' friend.id %}">
+                {% if friend.pic %}
+                <img width="60px" height="60px" src="{{ friend.pic.url }}" alt="Profile Picture of {{ friend.username }}">
+                {% else %}
+                <img width="60px" height="60px" src="{% static 'user.png' %}" alt="Default User Image">
+                {% endif %}
+                <h2>{{ friend.name }}</h2>
+            </a>
+        </div>
+        
+        <div class="btns">
+            {% if not friend_request_exists %}
+            {% else %}
+                <button class="requested">Requested</button>
+            {% endif %}
+            <a href='{% url "friend" friend.id %}'><button class="message">Message</button></a>
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+    <div id="empty"></div>
+    {% endblock body %}
+
+{% block css %}
+
+#empty{
+    height: 100px;
+}
+form label {
+    font-size: larger;
+}
+
+#srch_btn {
+    background-color: rgb(62, 200, 255);
+    padding: 5px 10px;
+    font-weight: 100;
+    font-size: 20px;
+    display: flex;
+}
+
+#search {
+    padding: 16px 26px;
+    font-size: 1.4vw;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+#srch {
+    color: black;
+    padding: 5px 10px;
+    border-radius: 2px;
+    border: 1px transparent;
+    font-size: 1vw;
+}
+
+.message {
+    background-color: rgb(8, 226, 1);
+}
+
+h2 {
+    margin: auto;
+}
+
+#main {
+    background-color: rgb(10, 10, 10);
+    margin: 2vw 9vw;
+    border-radius: 10px;
+}
+
+.aa {
+    text-decoration: none;
+    align-content: center;
+    display: flex;
+}
+
+a {
+    text-decoration: none;
+}
+
+#main .frnd img {
+    border-radius: 50%;
+    margin-right: 15px;
+}
+img{
+    border-radius: 50%;
+    margin-right: 15px;
+}
+.box {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    margin: 20px 20px;
+}
+
+#main {
+    padding: 15px 0;
+}
+
+button {
+    color: black;
+    padding: 15px 63px;
+    font-weight: 600;
+    border: 1px transparent;
+    cursor: pointer;
+    border-radius: 7px;
+    font-size: larger;
+}
+
+.btns {
+    display: flex;
+    align-items: center;
+    gap: 3vw;
+}
+
+.frnd {
+    display: grid;
+    margin: 0vw 9vw;
+    background-color: rgb(10, 10, 10);
+    grid-template-columns: 9fr 2.5fr;
+}
+
+.add-friend {
+    background-color: rgb(0, 183, 255);
+}
+
+.requested {
+    background-color: rgb(53, 240, 53);
+}
+@media (max-width:1250px) {
+    form label{
+        font-size: 2vw;
+    }
+    .frnd {
+        grid-template-columns: 9fr 3fr;
+    }
+}
+@media (max-width:1000px) {
+    form label{
+        font-size: 3.5vw;
+    }
+    .frnd {
+        grid-template-columns: 9fr 3fr;
+    }
+    img{
+        width: 50px;
+        height: 50px;
+    }
+    .frnd .box a h2{
+        font-size: 2vw;
+    }
+    button{
+        color: black;
+        padding: 10px 33px;
+        font-weight: 512;
+        border: 1px transparent;
+        cursor: pointer;
+        border-radius: 7px;
+        font-size: 2.2vw;
+    }
+    #srch{
+        font-size: 1.5vw;
+    }
+}
+@media (max-width:670px) {
+    .frnd {
+        grid-template-columns: 9fr 4.5fr;
+    } 
+    button{
+        font-size: 3vw;
+    }
+    .frnd .box a h2{
+        font-size: 3vw;
+    }
+    form label{
+        display: none;
+    }
+    #srch{
+        width: 50%;
+        font-size: 2.8vw;
+        height: 4.3vw;
+    }
+}
+@media (max-width: 500px) {
+    .frnd {
+        grid-template-columns: 9fr 4fr;
+    }
+    button{
+        color: black;
+        padding: 10px 20px;
+        font-weight: 512;
+        border: 1px transparent;
+        cursor: pointer;
+        border-radius: 7px;
+        font-size: 3vw;
+    }
+    #srch{
+        width: 50%;
+        font-size: 2.8vw;
+        height: 4vw;
+    }
+    #srch_btn{
+        padding: 3px 10px;
+    }
+    #search{
+        margin-bottom: 0;
+    }
+}
+@media (max-width: 400px) {
+    .frnd {
+        grid-template-columns: 9fr 5fr;
+    }
+    #srch_btn{
+        padding: 3px 6px;
+    }
+    .box{
+        margin: 10px 10px;
+    }
+}
+{% endblock css %}
+
+{% block page_name %}
+Find friends
+{% endblock page_name %}
+
+{% block title %}Find friends{% endblock title %}

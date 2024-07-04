@@ -1,0 +1,289 @@
+{% extends "home/base.html" %}
+{% load static %}
+{% block body %}
+<div class="user_info">
+    {% if specific_friend.profile.pic %}
+        <img class="imge" width="120px" height="120px" src="{{specific_friend.profile.pic.url}}" alt="Profile Picture of {{ friend.username }}">
+    {% else %}
+        <img class="imge" width="120px" height="120px" src="{% static 'user.png' %}" alt="Default User Image">
+    {% endif %}
+    <h3>{{specific_friend.profile.name}}</h3>
+    <h4>{{specific_friend.profile.user}}</h4>
+</div>
+<div class="msg_box" id="msg_box">
+    {% for chat in all_chat %}
+            {% if chat.msg_sender == request.user.profile and chat.msg_receiver == specific_friend.profile %}
+            <div class="parent"><p class="messages sending">{{chat.body}}</p></div> 
+            {% elif chat.msg_receiver == request.user.profile and chat.msg_sender == specific_friend.profile %}
+                <p class="messages receiving">{{chat.body}}</p>
+        {% endif %}
+    {% endfor %}
+    
+</div>
+<div id="down" onclick="scrollToEnd()">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32"><path d="M12 2C17.52 2 22 6.48 22 12C22 17.52 17.52 22 12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2ZM13 12V8H11V12H8L12 16L16 12H13Z" fill="rgba(255,255,255,1)"></path></svg></div>
+    <div class="form">
+    <form action="" method="post" id="myform">{% csrf_token %}
+        <input type="text" name="mssg" id="idbody" placeholder="Enter your message">
+        <button class="send"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M3 13.0001H9V11.0001H3V1.8457C3 1.56956 3.22386 1.3457 3.5 1.3457C3.58425 1.3457 3.66714 1.36699 3.74096 1.4076L22.2034 11.562C22.4454 11.695 22.5337 11.9991 22.4006 12.241C22.3549 12.3241 22.2865 12.3925 22.2034 12.4382L3.74096 22.5925C3.499 22.7256 3.19497 22.6374 3.06189 22.3954C3.02129 22.3216 3 22.2387 3 22.1544V13.0001Z" fill="rgba(0,0,0,1)"></path></svg></button>
+    </form>
+</div>
+
+{% endblock body %}
+{% block css %}
+#down {
+    position: sticky;
+    cursor: pointer;
+    float: right;
+    right: 20px;
+    opacity: 0.7;
+    visibility: hidden;
+    bottom: 20%;
+}
+
+.msg_box{
+    display: flex;
+    flex-direction: column ;
+    margin-bottom: 10vw;
+}
+.messages{
+    width: fit-content;
+    display: inline;
+    border-radius: 7px;
+    background-color: aqua;
+    margin: 0 15vw;
+    padding: 5px 9px;
+    color: black;
+    margin-bottom: 1vw;
+    font-size: large;
+}
+.parent{
+    display: flex;
+    justify-content: right;
+}
+.receiving{
+    background-color: gray;
+}
+.sending{
+    position:relative;
+    background-color: deepskyblue;
+}
+.form{
+    display: flex;
+    justify-content: center;
+}
+form{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    align-items: end;
+    position: fixed;
+    margin-bottom: 65px;
+    bottom: 0;
+
+}
+button{
+    color: black;
+    height: 44px;
+    padding: 3px 10px;
+    background-color: rgb(8, 226, 1);
+    border: 1px transparent;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+img{
+    border-radius: 50%;
+}
+input{
+    font-size: larger;
+    width: 75vw;
+    height: 40px;
+    padding: 0 30px;
+    border-radius: 7px;
+    color: black;
+}
+.user_info{
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+h3{
+    font-weight: 100;
+    opacity: 0.94;
+}
+h4{
+    font-weight: 100;
+}
+a{
+    text-decoration: none
+}
+
+@media (max-width:1000px) {
+    input{
+        width: 65vw;
+    }
+}
+@media (max-width: 600px) {
+    input{
+        width: 55vw;
+    }
+    form{
+        gap: 5px;
+    }
+    #down {
+        right: 5px;
+    }
+}
+@media (max-width: 450px) {
+    input{
+        height: 30px;
+        width: 50vw;
+    }
+    button{
+        height: 34px;
+    }
+    .imge{
+        width: 100px;
+        height: 100px;
+    }
+}
+{% endblock css %}
+{% block js %}
+<script>
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+
+
+let form = document.getElementById("myform")
+form.addEventListener("submit",sendchat)
+
+function sendchat(e){
+    e.preventDefault()
+    let chatMessage = document.getElementById("idbody").value
+    console.log(chatMessage);  
+ 
+
+    if (chatMessage.trim() === '') {
+        console.log("Chat message is empty.");
+        return;
+    }
+    let url= "{% url 'sent_msg' specific_friend.profile.id %}"
+    const data = {msg : chatMessage};   
+    fetch(url,{
+        method: 'POST',
+        headers : {
+            'content-type' : 'application/json',
+            'X-CSRFToken': csrftoken,
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("success :",data);
+        let chat_body = document.getElementById("msg_box")
+        let chat_parent = document.createElement("div")
+        chat_parent.classList.add("parent")
+        let chat_message = document.createElement("p")
+        chat_message.classList.add("messages")
+        chat_message.classList.add("sending")
+        chat_message.innerText = data
+        chat_parent.append(chat_message)
+        chat_body.append(chat_parent)
+        document.getElementById("idbody").value = ""
+        scrollToEnd()
+    })
+    .catch((error) => {
+        console.log("Error :",error);
+    });
+}
+
+
+
+   
+
+setInterval(receiveMessages,200)
+
+let counter = {{num}}
+
+function receiveMessages(){
+
+        const data = {num :counter}
+        let url= "{% url 'receive_msg' specific_friend.profile.id %}"
+        fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            console.log("success :",data);
+            if(data.length == 0 ){
+            }
+            else{
+                let lastmsg = data[data.length-1]
+                if(counter == data.length){
+                    console.log("no new chat is there");
+                }
+                else{   
+                    let chat_body = document.getElementById("msg_box")
+                    let chat_message = document.createElement("p")
+                    chat_message.classList.add("messages")
+                    chat_message.classList.add("receiving")
+                    chat_message.innerText = lastmsg
+                    chat_body.append(chat_message)
+                    document.getElementById("idbody").value = ""   
+                    scrollToEnd()
+                }
+            }
+        counter = data.length
+        })
+        .catch((error) => {
+            console.log("Error :",error);
+        });
+    }
+
+
+// Function to check and update the visibility of the down arrow button
+function updateDownArrowVisibility() {
+    const downArrow = document.getElementById('down');
+    if (window.innerHeight + window.scrollY < document.body.offsetHeight) {
+        downArrow.style.visibility = 'visible'; // Display the button
+    } else {
+        downArrow.style.visibility = 'hidden'; // Hide the button
+    }
+}
+
+// Function to scroll to the end of the page
+function scrollToEnd() {
+    window.scrollTo(0, document.body.scrollHeight);
+}
+
+// Add a scroll event listener to check for scrolling and update button visibility
+window.addEventListener('scroll', updateDownArrowVisibility);
+
+// Initial visibility check
+updateDownArrowVisibility();
+
+// Add a click event listener to the down arrow button to scroll to the end
+const downArrowButton = document.getElementById('down');
+downArrowButton.addEventListener('click', scrollToEnd);
+
+</script>
+
+{% endblock js %}
+{% block title %}Chat{% endblock title %}

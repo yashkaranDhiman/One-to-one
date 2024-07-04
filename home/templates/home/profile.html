@@ -1,0 +1,142 @@
+{% extends "home/base.html" %}
+{% load static %}
+{% block body %}
+<div id="container">
+    <div id="left">
+        {% if pro.pic %}
+        <div id="image">
+            <img id="imge" src="{{ pro.pic.url }}" alt="...">
+        </div>
+        {% else %}
+        <div id="image">
+            <img id="imge" src="{% static 'user.png' %}" alt="...">
+        </div>
+        {% endif %}
+    </div>
+    <div id="right">
+        <div id="right_img">
+            {% if pro.link %}
+            {{pro.link}}
+            {% endif %}
+            <h2>{{pro.name}}</h2>
+            {% if user_id == pro.id %}
+            <a href='{% url "edit" pro.id %}'><button class="but">Edit profile</button></a>
+            <button class="but">Account settings</button>
+            {% else %}
+            <button class="but">Add friend</button>
+            <a href={% url "friend" pro.id %}><button class="but">Message</button></a>
+            {% endif %}
+            
+        </div>  
+        <div id="count">
+            <p id="following">{{my_frnd}} friends</p>
+        </div>
+        <div id="personal">
+            <h4 id="user_name">{{pro.user}}</h4>
+            <h5 id="bio">{{pro.bio}}</h5>
+        </div>
+    </div>
+</div>
+{% endblock body %}
+{% block css %}
+#personal{
+    margin-bottom: 1.2vw;
+}
+#right{
+    margin: 3vw 3vw 3vw 5vw;
+}
+#container{
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    
+}
+.but{
+    font-weight: 700;
+    cursor: pointer;
+}
+#imge{
+    width: 170px;
+    height: 170px;
+    margin: 2vw 2vw 2vw 25vw;
+    border-radius: 50%;
+}
+.but{
+    border-radius: 7px;
+    padding: 8px 15px;
+    border: 2px transparent;
+    color: rgb(36, 36, 36);
+}
+#right_img{
+    display: flex;
+    font-size: large;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 50%;
+    margin-bottom: 1.5vw;
+}
+#count{
+    margin-bottom: 1.5vw;
+    display: flex;
+    font-size: large;
+    flex-direction: row;
+    gap: 20px;
+    width: 25%;
+    place-items: start;
+}
+#user_name{
+    margin-bottom: .7vw;
+}
+#bio{
+    font-weight: 100;
+    letter-spacing: 1px;
+}
+a{
+    text-decoration: none;
+}
+@media (max-width:1300px) {
+    #imge{
+        margin: 2vw 2vw 2vw 20vw;
+    }
+    #right_img{
+        width: 70%;
+    }
+}
+@media (max-width:1000px) {
+    #imge{
+        width: 17vw;
+        height: 17vw;
+        margin: 2vw 2vw 2vw 15vw;
+    }
+    #right_img{
+        
+        width: 80%;
+    }
+}
+@media (max-width:750px) {
+    #imge{
+        width: 17vw;
+        height: 17vw;
+        margin: 2vw 2vw 2vw 10vw;
+    }
+    #right_img{
+        
+        width: 90%;
+    }
+}
+@media (max-width:600px) {
+    #imge{
+        width: 19vw;
+        height: 19vw;
+        margin: 2vw 2vw 2vw 10vw;
+    }
+    #right_img{
+        display: block;
+        width: 95%;
+    }
+    .but{
+        margin-top: 10px;
+    }
+}
+{% endblock css %}
+{% block title %}Profile{% endblock title %}
+

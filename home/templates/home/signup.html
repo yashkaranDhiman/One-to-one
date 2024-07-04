@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=EB+Garamond&family=Inter:wght@200&family=Karla:ital@1&family=Lato&family=Montserrat&family=Roboto&family=Satisfy&display=swap');
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: 'Bebas Neue', sans-serif;
+            font-family: 'EB Garamond', serif;
+            font-family: 'Inter', sans-serif;
+            font-family: 'Karla', sans-serif;
+            font-family: 'Lato', sans-serif;
+            font-family: 'Montserrat', sans-serif;
+            font-family: 'Roboto', sans-serif;
+        }
+        *::selection{
+            color: white;
+            background-color: black;
+        }
+        html,body{
+            width: 100%;
+            height: 100%;
+            background: rgb(0,109,129);
+            background: radial-gradient(circle, rgb(0, 225, 255) 0%, rgba(14,0,255,1) 53%, rgba(49,31,126,1) 100%); 
+        }
+        #main{
+            margin: 5vw 10vw;
+            border: 1px solid black ;
+            padding: 4vw 3vw;
+            border-radius: 20px;
+            background-color: white;
+        }
+        #main h1{
+            font-size: 3vw;
+            margin-bottom: 2.6vw;
+        }
+        .inp_field{
+            margin: 1vw 0;
+        }
+        input{
+            margin: 10px 0;
+            border-radius: 12px;
+            width: 50vw;
+            padding: 3px 6px;
+            height: 30px;
+            border: 1px solid;
+        }
+        label{
+            font-size: x-large;
+        }
+        button{
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: larger;
+            border: 1px transparent;
+            background-color: black;
+            color: white;
+            margin-top: 2vw;
+        }
+        @media (max-width:1000px) {
+            #main h1{
+                font-size: 4vw;
+            }
+            label{
+                font-size: 2.5vw;
+            }
+        }
+        @media (max-width:700px) {
+            #main{
+                padding: 7vw 2vw 4vw 2vw;
+                margin: 10vw 6vw;
+            }
+            #main h1{
+                font-size: 5.5vw;
+                margin-bottom: 4vw;
+            }
+            button{
+                margin-left: 4vw;
+            }
+            label{
+                font-size: 3.2vw;
+            }
+            .inp_field{
+                padding-left: 4vw;
+            }
+        }
+        @media (max-width:500px) {
+            input{
+                height: 23px;
+                width: 87%;
+                border-radius: 10px;
+            } 
+            label{
+                font-size: 4vw;
+            }
+            #main{
+                padding: 10vw 3vw 4vw 3vw;
+            }
+            #main h1{
+                margin-bottom: 7vw;
+                font-size:8vw;
+            }
+            
+        }
+        p{
+            float: right;
+        }
+        .flsh{
+            background-color: rgb(255, 143, 143);
+            height: fit-content;
+            padding: 1.5vw 10vw;
+            display: grid;
+            grid-template-columns: 0.5fr 10fr 0fr;
+        }
+        .flsh strong{
+            color: black;
+            font-size: 1.2vw;
+        }
+        .flsh div{
+            color: black;
+            font-size: 1.2vw;
+        }
+        #close{
+            color: black;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    {% for message in messages %}
+    <div class="flsh" id="flashMessage">
+        <strong>Alert:</strong><div id="main_msg">{{message}}</div><svg id="close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30"><path d="M12.0007 10.5865L16.9504 5.63672L18.3646 7.05093L13.4149 12.0007L18.3646 16.9504L16.9504 18.3646L12.0007 13.4149L7.05093 18.3646L5.63672 16.9504L10.5865 12.0007L5.63672 7.05093L7.05093 5.63672L12.0007 10.5865Z"></path></svg>
+    </div>
+  {% endfor %}
+    <div id="main">
+        <form action="" method="POST">{% csrf_token %}
+        <h1>Sign in here</h1>
+        <div class="inp_field">
+        <label for="username">Enter username :</label><br>
+        <input type="text" name="username" id="username" placeholder="john007" value="{{ request.POST.username }}" required>
+        </div>
+        <div class="inp_field">
+        <label for="email">Enter you email :</label><br>
+        <input type="email" name="email" id="email" placeholder="Example@domain.com" value="{{ request.POST.email }}" required>
+        </div>
+        <div class="inp_field">
+        <label for="password1">Enter Password :</label><br>
+        <input type="password" name="password" id="password1"  required>
+        </div>
+        <div class="inp_field">
+        <label for="password2">Confirm Password :</label><br>
+        <input type="password" name="password2" id="password2"  required>
+        </div>
+            <button type="submit">Submit</button>
+            <p>already have an account <a href='{% url "login" %}'>login here</a></p>
+    </div>
+</form>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var closeBtn = document.getElementById('close');
+        var flashMessage = document.getElementById('flashMessage');
+
+        closeBtn.addEventListener('click', function () {
+            flashMessage.style.display = 'none';
+        });
+    });
+</script>
+</body>
+</html>
